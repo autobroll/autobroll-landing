@@ -1,10 +1,10 @@
 export default function DemoStrip({ items }) {
   return (
-    <section className="demo-strip-section" id="workflow">
+    <section className="demo-strip-section" id="how-it-works">
       <div className="section-heading section-heading--tight">
         <div>
-          <span className="eyebrow">Workflow</span>
-          <h2>Keep the story short.</h2>
+          <span className="eyebrow">Showcase</span>
+          <h2>Create fast. Look premium</h2>
         </div>
       </div>
 
