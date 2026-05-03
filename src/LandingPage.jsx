@@ -14,6 +14,8 @@ import {
 } from "./data/landingContent";
 
 const DEFAULT_HASH = "#showcase";
+const LANDING_PAGE_TITLE = "Autobroll - Premium AI Video Editing";
+const FAVICON_HREF = "/autobroll-icon.png";
 const ALLOWED_HASHES = new Set(["#showcase", "#how-it-works", "#about"]);
 
 const aboutAudience = ["Creators", "Editors", "Teams"];
@@ -184,6 +186,21 @@ function AboutPage() {
 
 export default function LandingPage() {
   const [activeHash, setActiveHash] = useState(getCurrentHash);
+
+  useEffect(() => {
+    document.title = LANDING_PAGE_TITLE;
+
+    let favicon = document.querySelector("link[rel='icon']");
+
+    if (!favicon) {
+      favicon = document.createElement("link");
+      favicon.setAttribute("rel", "icon");
+      document.head.appendChild(favicon);
+    }
+
+    favicon.setAttribute("type", "image/png");
+    favicon.setAttribute("href", FAVICON_HREF);
+  }, []);
 
   useEffect(() => {
     const syncHash = () => {
