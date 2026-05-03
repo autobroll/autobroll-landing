@@ -36,8 +36,8 @@ export default function VideoCard({ card, index }) {
   const ratioClass = card.ratio || 'portrait';
   const beforeUrl = getBeforeUrl(card);
   const afterUrl = getAfterUrl(card);
-  const beforeCompareLabel = card.beforeCompareLabel || 'Avant';
-  const afterCompareLabel = card.afterCompareLabel || 'Après';
+  const beforeCompareLabel = card.beforeCompareLabel || 'Before';
+  const afterCompareLabel = card.afterCompareLabel || 'After';
 
   return (
     <article
