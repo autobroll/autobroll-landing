@@ -1,3 +1,5 @@
+import { APP_URL } from "../data/landingContent";
+
 export default function FinalCTA() {
   return (
     <section className="final-cta-section" id="login">
@@ -9,8 +11,8 @@ export default function FinalCTA() {
         </div>
 
         <div className="final-cta-actions">
-          <a href="#showcase" className="button button--primary">
-            Open showcase
+          <a href={APP_URL} className="button button--primary">
+            Start creating
           </a>
           <a href="#top" className="button button--ghost">
             Back to top

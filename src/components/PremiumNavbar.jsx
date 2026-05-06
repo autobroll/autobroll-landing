@@ -1,3 +1,5 @@
+import { APP_URL } from "../data/landingContent";
+
 const AUTOBROLL_LOGO_URL =
   'https://pub-29017a168d3a4edc87594d9ff9c1f185.r2.dev/logo/AutoBroll%206%201500x1500.png';
 
@@ -37,7 +39,7 @@ export default function PremiumNavbar({ links, activeHref = '#showcase' }) {
         </nav>
 
         <div className="navbar-shell__right">
-          <a href="#top" className="button button--primary button--nav">
+          <a href={APP_URL} className="button button--primary button--nav">
             Log In
           </a>
         </div>

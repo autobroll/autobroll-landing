@@ -1,3 +1,5 @@
+export const APP_URL = "https://app.autobroll.io";
+
 export const navLinks = [
   { label: "Showcase", href: "#showcase" },
   { label: "How it works", href: "#how-it-works" },
