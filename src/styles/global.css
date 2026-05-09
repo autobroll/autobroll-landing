@@ -1413,3 +1413,120 @@ a {
     font-size: 1.15rem;
   }
 }
+
+/* Mobile conversion polish: bring the before/after showcase higher on first view. */
+@media (max-width: 560px) {
+  :root {
+    --header-offset: 144px;
+  }
+
+  .page-content {
+    padding-top: calc(var(--header-offset) + 8px);
+    padding-bottom: 52px;
+  }
+
+  .navbar-shell {
+    gap: 10px;
+    padding: 10px 12px 12px;
+    border-radius: 26px;
+  }
+
+  .brand-mark__logo-wrap {
+    width: 36px;
+    height: 36px;
+    flex-basis: 36px;
+    border-radius: 11px;
+  }
+
+  .brand-mark__text {
+    font-size: 0.9rem;
+    letter-spacing: 0.075em;
+  }
+
+  .nav-links {
+    gap: 6px;
+  }
+
+  .nav-link {
+    padding: 8px 11px;
+    font-size: 0.95rem;
+  }
+
+  .navbar-shell .button,
+  .navbar-shell .button--nav {
+    width: auto;
+    min-height: 38px;
+    padding: 0 24px;
+    font-size: 0.94rem;
+  }
+
+  .demo-strip-section {
+    padding-top: 6px;
+  }
+
+  .section-heading {
+    margin-bottom: 12px;
+  }
+
+  .section-heading .eyebrow {
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+  }
+
+  .section-heading h2 {
+    font-size: clamp(2rem, 10vw, 2.55rem);
+    line-height: 1.02;
+    letter-spacing: -0.055em;
+  }
+
+  .demo-strip-grid {
+    gap: 8px;
+  }
+
+  .demo-strip-card {
+    padding: 11px 14px 12px;
+    border-radius: 18px;
+  }
+
+  .demo-strip-card .eyebrow {
+    font-size: 0.64rem;
+    letter-spacing: 0.17em;
+  }
+
+  .demo-strip-card h3 {
+    margin-top: 6px;
+    font-size: 0.95rem;
+    line-height: 1.18;
+  }
+
+  .demo-strip-card p {
+    margin-top: 5px;
+    font-size: 0.84rem;
+    line-height: 1.32;
+  }
+
+  .gallery-section {
+    padding-top: 10px;
+  }
+
+  .video-card {
+    margin-bottom: 12px;
+    padding: 7px;
+    border-radius: 18px;
+  }
+
+  .video-card__slot {
+    border-radius: 14px;
+  }
+
+  .compare-grid {
+    gap: 7px;
+  }
+
+  .compare-label {
+    top: 8px;
+    left: 8px;
+    padding: 4px 8px;
+    font-size: 0.58rem;
+  }
+}
