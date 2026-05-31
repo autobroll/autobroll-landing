@@ -4,7 +4,6 @@ import DemoStrip from "./components/DemoStrip";
 import PremiumNavbar from "./components/PremiumNavbar";
 import VideoGallery from "./components/VideoGallery";
 import {
-  demoHighlights,
   facelessIntro,
   facelessPanels,
   galleryCards,
@@ -231,7 +230,7 @@ export default function LandingPage() {
 
     return (
       <div className="main-column">
-        <DemoStrip items={demoHighlights} />
+        <DemoStrip />
         <VideoGallery cards={galleryCards} />
       </div>
     );
