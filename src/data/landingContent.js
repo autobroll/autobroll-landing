@@ -2,8 +2,112 @@ export const APP_URL = "https://app.autobroll.io";
 
 export const navLinks = [
   { label: "Showcase", href: "#showcase" },
+  { label: "Features", href: "#features" },
   { label: "How it works", href: "#how-it-works" },
-  { label: "About", href: "#about" },
+  { label: "Pricing", href: "#pricing" },
+];
+
+// Replace these placeholders with verified product and customer data.
+export const proofMetrics = [
+  { value: "XXK+", label: "videos created" },
+  { value: "XXh", label: "saved per project" },
+  { value: "XX+", label: "active creators" },
+];
+
+export const trustPlaceholders = ["Logo 01", "Logo 02", "Logo 03", "Logo 04"];
+
+// Mock content: replace names, roles and quotes with real customer proof.
+export const testimonials = [
+  {
+    quote:
+      "Add a short customer quote here that explains the time saved and the visible improvement in their content.",
+    name: "Creator name",
+    role: "Role or @handle",
+    result: "Result placeholder",
+  },
+  {
+    quote:
+      "Use this space for a concrete before-and-after story: workflow, turnaround time, or publishing consistency.",
+    name: "Customer name",
+    role: "Company or channel",
+    result: "Metric placeholder",
+  },
+  {
+    quote:
+      "A third testimonial can focus on quality, ease of use, or how Autobroll replaced several separate tools.",
+    name: "Editor name",
+    role: "Editor or agency",
+    result: "Outcome placeholder",
+  },
+];
+
+export const pricingPlans = [
+  {
+    name: "Free",
+    description: "135 included credits · fixed",
+    price: "$0",
+    suffix: "/ month",
+    features: [
+      "Explore the interface",
+      "Limited access to the studio",
+      "Perfect for testing Autobroll",
+    ],
+    cta: "Start free",
+  },
+  {
+    name: "Starter",
+    description: "500 included credits · per month",
+    price: "$19",
+    suffix: "/ month",
+    features: [
+      "Full access to Autobroll",
+      "100 min of video / month",
+      "Unlimited exports",
+    ],
+    cta: "Choose Starter",
+    badge: "Recommended",
+    featured: true,
+  },
+  {
+    name: "Pro",
+    description: "1500 included credits · per month",
+    price: "$49",
+    suffix: "/ month",
+    features: [
+      "Ideal for higher volumes",
+      "300 min of video / month",
+      "Unlimited exports",
+    ],
+    cta: "Choose Pro",
+  },
+];
+
+export const faqs = [
+  {
+    question: "What can I create with Autobroll?",
+    answer:
+      "Autobroll is designed for polished talking-head edits and faceless videos, including captions, B-roll, generated visuals and motion-driven sequences.",
+  },
+  {
+    question: "Do I keep control over the final edit?",
+    answer:
+      "Yes. Automation helps build the first version faster, while the workspace lets you review and refine the creative decisions before export.",
+  },
+  {
+    question: "Do I need motion design experience?",
+    answer:
+      "No. Autobroll is built to make premium visual editing approachable without requiring advanced motion design skills.",
+  },
+  {
+    question: "Can I create videos without filming myself?",
+    answer:
+      "Yes. Faceless mode helps turn voice-led or concept-led ideas into structured visual sequences without appearing on camera.",
+  },
+  {
+    question: "Is there a free trial?",
+    answer:
+      "Yes. Autobroll includes a free trial mode that lets you explore the studio and test the editing workflow. Exporting is disabled in free trial mode.",
+  },
 ];
 
 export const sidebarItems = [
@@ -40,8 +144,8 @@ export const galleryCards = [
     label: "Captions",
     title: "Podcast captions result",
     ratio: "portrait",
-    beforeVideoUrl: "https://pub-29017a168d3a4edc87594d9ff9c1f185.r2.dev/Images-Pages/Landing%20Page/Galerie%20Avant%20et%20Apres/Cam%201.mp4",
-    afterVideoUrl: "https://pub-29017a168d3a4edc87594d9ff9c1f185.r2.dev/Images-Pages/Landing%20Page/Galerie%20Avant%20et%20Apres/Video%201.mp4",
+    beforeVideoUrl: "https://pub-29017a168d3a4edc87594d9ff9c1f185.r2.dev/Images-Pages/Landing%20Page/Galerie%20Avant%20et%20Apres/avant.mp4",
+    afterVideoUrl: "https://pub-29017a168d3a4edc87594d9ff9c1f185.r2.dev/Images-Pages/Landing%20Page/Galerie%20Avant%20et%20Apres/apres.mp4",
   },
   {
     id: "gallery-02",

@@ -1,48 +1,87 @@
+import { useEffect, useState } from "react";
 import { APP_URL } from "../data/landingContent";
 
-const AUTOBROLL_LOGO_URL =
-  'https://pub-29017a168d3a4edc87594d9ff9c1f185.r2.dev/logo/AutoBroll%206%201500x1500.png';
+const AUTOBROLL_LOGO_URL = "/AutoBroll%20blanc%20alpha.png";
 
-export default function PremiumNavbar({ links, activeHref = '#showcase' }) {
+export default function PremiumNavbar({ links }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") setIsOpen(false);
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, []);
+
+  const closeMenu = () => setIsOpen(false);
+
   return (
     <header className="site-header">
-      <div className="glass-shell navbar-shell">
-        <div className="navbar-shell__left">
-          <a className="brand-mark" href="#showcase" aria-label="Autobroll home">
-            <span className="brand-mark__logo-wrap" aria-hidden="true">
-              <img
-                className="brand-mark__logo"
-                src={AUTOBROLL_LOGO_URL}
-                alt=""
-                loading="eager"
-                decoding="async"
-              />
-            </span>
-            <span className="brand-mark__text">Autobroll</span>
-          </a>
-        </div>
+      <div className="navbar-shell">
+        <a
+          className="brand-mark"
+          href="#top"
+          aria-label="Autobroll home"
+          onClick={closeMenu}
+        >
+          <span className="brand-mark__logo-wrap" aria-hidden="true">
+            <img
+              className="brand-mark__logo"
+              src={AUTOBROLL_LOGO_URL}
+              alt=""
+              loading="eager"
+              decoding="async"
+            />
+          </span>
+          <span className="brand-mark__text">Autobroll</span>
+        </a>
 
-        <nav className="nav-links" aria-label="Primary navigation">
-          {links.map((link) => {
-            const isActive = link.href === activeHref;
-            return (
-              <a
-                key={link.label}
-                href={link.href}
-                className={`nav-link${isActive ? ' nav-link--active' : ''}`}
-                aria-current={isActive ? 'page' : undefined}
-              >
-                {link.label}
-              </a>
-            );
-          })}
+        <nav className="nav-links nav-links--desktop" aria-label="Primary navigation">
+          {links.map((link) => (
+            <a key={link.label} href={link.href} className="nav-link">
+              {link.label}
+            </a>
+          ))}
         </nav>
 
-        <div className="navbar-shell__right">
-          <a href={APP_URL} className="button button--primary button--nav">
-            Log In
+        <div className="navbar-actions">
+          <a href={APP_URL} className="header-login">
+            Log in
           </a>
+          <a href={APP_URL} className="button button--primary button--nav">
+            Start creating
+          </a>
+          <button
+            className="menu-toggle"
+            type="button"
+            aria-label={isOpen ? "Close navigation" : "Open navigation"}
+            aria-expanded={isOpen}
+            aria-controls="mobile-navigation"
+            onClick={() => setIsOpen((current) => !current)}
+          >
+            <span />
+            <span />
+          </button>
         </div>
+
+        <nav
+          className={`mobile-menu${isOpen ? " mobile-menu--open" : ""}`}
+          id="mobile-navigation"
+          aria-label="Mobile navigation"
+        >
+          {links.map((link) => (
+            <a key={link.label} href={link.href} onClick={closeMenu}>
+              {link.label}
+              <span aria-hidden="true">↗</span>
+            </a>
+          ))}
+          <a href={APP_URL} onClick={closeMenu}>
+            Log in
+            <span aria-hidden="true">↗</span>
+          </a>
+        </nav>
       </div>
     </header>
   );

@@ -1,8 +1,67 @@
+import { useEffect, useRef, useState } from "react";
+
 function PlaceholderVideo({ title, label }) {
   return (
     <div className="video-placeholder" aria-label={`${title} ${label}`}>
       <div className="video-placeholder__play" />
     </div>
+  );
+}
+
+function LazyVideo({ videoUrl, title, label }) {
+  const videoRef = useRef(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const syncPreference = () => setReduceMotion(mediaQuery.matches);
+    syncPreference();
+    mediaQuery.addEventListener?.("change", syncPreference);
+    return () => mediaQuery.removeEventListener?.("change", syncPreference);
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setShouldLoad(true);
+        setIsVisible(entry.isIntersecting);
+      },
+      { rootMargin: "320px 0px", threshold: 0.08 },
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !shouldLoad) return;
+
+    if (isVisible && !reduceMotion) {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  }, [isVisible, reduceMotion, shouldLoad]);
+
+  return (
+    <video
+      ref={videoRef}
+      className="card-video"
+      muted
+      loop
+      playsInline
+      preload="none"
+      controls={reduceMotion}
+      aria-label={`${title} ${label}`}
+    >
+      {shouldLoad ? <source src={videoUrl} type="video/mp4" /> : null}
+    </video>
   );
 }
 
@@ -21,50 +80,22 @@ function MediaSlot({ videoUrl, imageUrl, title, label }) {
 
   if (!videoUrl) return <PlaceholderVideo title={title} label={label} />;
 
-  return (
-    <video
-      className="card-video"
-      autoPlay
-      muted
-      loop
-      playsInline
-      preload="metadata"
-      aria-label={`${title} ${label}`}
-    >
-      <source src={videoUrl} />
-    </video>
-  );
-}
-
-function getBeforeUrl(card) {
-  return card.beforeVideoUrl || '';
-}
-
-function getAfterUrl(card) {
-  return card.afterVideoUrl || card.videoUrl || '';
-}
-
-function getBeforeImageUrl(card) {
-  return card.beforeImageUrl || '';
-}
-
-function getAfterImageUrl(card) {
-  return card.afterImageUrl || card.imageUrl || '';
+  return <LazyVideo videoUrl={videoUrl} title={title} label={label} />;
 }
 
 export default function VideoCard({ card, index }) {
-  const ratioClass = card.ratio || 'portrait';
-  const beforeUrl = getBeforeUrl(card);
-  const afterUrl = getAfterUrl(card);
-  const beforeImageUrl = getBeforeImageUrl(card);
-  const afterImageUrl = getAfterImageUrl(card);
-  const beforeCompareLabel = card.beforeCompareLabel || 'Before';
-  const afterCompareLabel = card.afterCompareLabel || 'After';
+  const ratioClass = card.ratio || "portrait";
+  const beforeUrl = card.beforeVideoUrl || "";
+  const afterUrl = card.afterVideoUrl || card.videoUrl || "";
+  const beforeImageUrl = card.beforeImageUrl || "";
+  const afterImageUrl = card.afterImageUrl || card.imageUrl || "";
+  const beforeCompareLabel = card.beforeCompareLabel || "Before";
+  const afterCompareLabel = card.afterCompareLabel || "After";
 
   return (
     <article
       className={`video-card video-card--${ratioClass}`}
-      aria-label={`${card.title} slot ${index + 1}`}
+      aria-labelledby={`showcase-card-${index}`}
     >
       <div className="compare-grid video-card__compare">
         <div className="compare-column">
@@ -91,7 +122,12 @@ export default function VideoCard({ card, index }) {
           </div>
         </div>
       </div>
-      <span className="sr-only">{card.title}</span>
+
+      <div className="video-card__meta">
+        <span className="video-card__category">{card.label}</span>
+        <h3 id={`showcase-card-${index}`}>{card.title}</h3>
+        <span className="video-card__arrow" aria-hidden="true">↗</span>
+      </div>
     </article>
   );
 }
