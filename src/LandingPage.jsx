@@ -146,9 +146,9 @@ function HeroSection() {
           Your video editor <span className="text-gradient">won’t like this.</span>
         </h1>
         <p className="hero-copy__lead">
-          Drop in your footage. Autobroll understands what matters and
-          automatically adds premium captions, B-roll, Punch Text, smart zooms
-          and motion design — while keeping you in control of the final edit.
+          Drop in your footage. Autobroll understands what matters and automatically
+          adds premium captions, B-roll, Punch Text, smart zooms and motion design —
+          while keeping you in control of the final edit.
         </p>
         <div className="hero-actions">
           <a href={APP_URL} className="button button--primary button--large">
@@ -504,7 +504,7 @@ function SiteFooter() {
         <p>AI-assisted video editing for premium content.</p>
       </div>
       <div className="site-footer__links">
-        <div><span>Product</span><a href="#features">Features</a><a href="#showcase">Showcase</a><a href="#pricing">Pricing</a></div>
+        <div><span>Product</span><a href="#features">Features</a><a href="/ai-b-roll-generator">AI B-Roll Generator</a><a href="#showcase">Showcase</a><a href="#pricing">Pricing</a></div>
         <div><span>Company</span><a href={`mailto:${CONTACT_EMAIL}`}>Contact</a><a href="#faq">FAQ</a></div>
         <div><span>Legal</span><a href="#legal-placeholder">Privacy</a><a href="#legal-placeholder">Terms</a></div>
       </div>

@@ -3,7 +3,7 @@ import { APP_URL } from "../data/landingContent";
 
 const AUTOBROLL_LOGO_URL = "/AutoBroll%20blanc%20alpha.png";
 
-export default function PremiumNavbar({ links }) {
+export default function PremiumNavbar({ links, brandHref = "#top" }) {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function PremiumNavbar({ links }) {
       <div className="navbar-shell">
         <a
           className="brand-mark"
-          href="#top"
+          href={brandHref}
           aria-label="Autobroll home"
           onClick={closeMenu}
         >
