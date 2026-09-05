@@ -162,6 +162,9 @@ function Footer() {
           <span>Product</span>
           <a href="/">AI Video Editor</a>
           <a href="/ai-b-roll-generator">AI B-Roll Generator</a>
+          <a href="/automatic-captions">Premium Captions</a>
+          <a href="/faceless-video-editor">Faceless Video Editor</a>
+          <a href="/ai-video-editor-for-agencies">For Agencies</a>
           <a href={APP_URL}>Start creating</a>
         </div>
         <div>

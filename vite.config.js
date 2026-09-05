@@ -9,6 +9,9 @@ export default defineConfig({
       input: {
         main: resolve(process.cwd(), 'index.html'),
         aiBrollGenerator: resolve(process.cwd(), 'ai-b-roll-generator/index.html'),
+        facelessVideoEditor: resolve(process.cwd(), 'faceless-video-editor/index.html'),
+        automaticCaptions: resolve(process.cwd(), 'automatic-captions/index.html'),
+        agencyVideoEditor: resolve(process.cwd(), 'ai-video-editor-for-agencies/index.html'),
       },
     },
   },

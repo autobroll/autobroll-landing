@@ -504,7 +504,7 @@ function SiteFooter() {
         <p>AI-assisted video editing for premium content.</p>
       </div>
       <div className="site-footer__links">
-        <div><span>Product</span><a href="#features">Features</a><a href="/ai-b-roll-generator">AI B-Roll Generator</a><a href="#showcase">Showcase</a><a href="#pricing">Pricing</a></div>
+        <div><span>Product</span><a href="#features">Features</a><a href="/ai-b-roll-generator">AI B-Roll Generator</a><a href="/automatic-captions">Premium Captions</a><a href="/faceless-video-editor">Faceless Video Editor</a><a href="/ai-video-editor-for-agencies">For Agencies</a><a href="#showcase">Showcase</a><a href="#pricing">Pricing</a></div>
         <div><span>Company</span><a href={`mailto:${CONTACT_EMAIL}`}>Contact</a><a href="#faq">FAQ</a></div>
         <div><span>Legal</span><a href="#legal-placeholder">Privacy</a><a href="#legal-placeholder">Terms</a></div>
       </div>
