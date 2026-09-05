@@ -518,7 +518,7 @@ function SiteFooter() {
 
 export default function LandingPage() {
   useEffect(() => {
-    document.title = "Autobroll — Premium AI Video Editing";
+    document.title = "AI Video Editor for B-Roll, Captions & Motion | Autobroll";
     const scrollTimers = [];
 
     const scrollToInitialSection = () => {

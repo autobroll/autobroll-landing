@@ -1,0 +1,9 @@
+# Autobroll public landing page
+User-agent: *
+Allow: /
+
+# Explicitly allow OpenAI Search discovery
+User-agent: OAI-SearchBot
+Allow: /
+
+Sitemap: https://autobroll.io/sitemap.xml

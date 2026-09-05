@@ -24,6 +24,8 @@
 }
 
 html {
+  background-color: var(--bg);
+  color-scheme: dark;
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-height) + 20px);
 }
@@ -32,6 +34,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
   color: var(--white);
   background:
@@ -83,13 +86,21 @@ svg {
   outline-offset: 4px;
 }
 
+html,
+body,
+#root {
+  background-color: var(--bg);
+}
+
 #root,
 .page-shell {
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .page-shell {
   position: relative;
+  background-color: var(--bg);
   overflow: hidden;
 }
 
