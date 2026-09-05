@@ -146,9 +146,9 @@ function HeroSection() {
           Your video editor <span className="text-gradient">won’t like this.</span>
         </h1>
         <p className="hero-copy__lead">
-          Drop in your footage. Autobroll watches it, understands what matters,
-          and knows exactly when to add captions, B-rolls, Punch Text, smart
-          zooms and motion design.
+          Drop in your footage. Autobroll understands what matters and
+          automatically adds premium captions, B-roll, Punch Text, smart zooms
+          and motion design — while keeping you in control of the final edit.
         </p>
         <div className="hero-actions">
           <a href={APP_URL} className="button button--primary button--large">
@@ -518,7 +518,7 @@ function SiteFooter() {
 
 export default function LandingPage() {
   useEffect(() => {
-    document.title = "AI Video Editor for B-Roll, Captions & Motion | Autobroll";
+    document.title = "Autobroll — AI Video Editor";
     const scrollTimers = [];
 
     const scrollToInitialSection = () => {
