@@ -12,6 +12,7 @@ export default defineConfig({
         facelessVideoEditor: resolve(process.cwd(), 'faceless-video-editor/index.html'),
         automaticCaptions: resolve(process.cwd(), 'automatic-captions/index.html'),
         agencyVideoEditor: resolve(process.cwd(), 'ai-video-editor-for-agencies/index.html'),
+        affiliate: resolve(process.cwd(), 'affiliate/index.html'),
       },
     },
   },
