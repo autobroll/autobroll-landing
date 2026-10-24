@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from "react";
+import { submitEnterpriseEarlyAccess } from "../api/enterpriseEarlyAccess";
 
 const initialValues = {
   companyName: "",
@@ -25,9 +26,13 @@ export default function EnterpriseEarlyAccessDialog({ isOpen, onClose }) {
   const confirmationRef = useRef(null);
   const closeTimer = useRef(null);
   const backdropPointerDown = useRef(false);
+  const requestIdRef = useRef(null);
+  const submittingRef = useRef(false);
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
-  const [previewComplete, setPreviewComplete] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
@@ -52,7 +57,9 @@ export default function EnterpriseEarlyAccessDialog({ isOpen, onClose }) {
       paddingRight: `${bodyPadding + scrollbarWidth}px`,
     });
     setIsClosing(false);
-    setPreviewComplete(false);
+    setSubmitted(false);
+    setSubmitError("");
+    requestIdRef.current = crypto.randomUUID();
     setErrors({});
     backdropPointerDown.current = false;
     dialog.showModal();
@@ -71,9 +78,9 @@ export default function EnterpriseEarlyAccessDialog({ isOpen, onClose }) {
 
   useEffect(() => {
     if (!isOpen) return;
-    if (previewComplete) confirmationRef.current?.focus({ preventScroll: true });
+    if (submitted) confirmationRef.current?.focus({ preventScroll: true });
     else companyRef.current?.focus({ preventScroll: true });
-  }, [isOpen, previewComplete]);
+  }, [isOpen, submitted]);
 
   const requestClose = () => {
     if (closeTimer.current !== null) return;
@@ -111,9 +118,9 @@ export default function EnterpriseEarlyAccessDialog({ isOpen, onClose }) {
     if (errors[name]) setErrors((current) => ({ ...current, [name]: undefined }));
   };
 
-  const previewRequest = (event) => {
+  const submitRequest = async (event) => {
     event.preventDefault();
-    if (isClosing) return;
+    if (isClosing || submittingRef.current) return;
     const nextValues = {
       ...values,
       companyName: values.companyName.trim(),
@@ -131,10 +138,21 @@ export default function EnterpriseEarlyAccessDialog({ isOpen, onClose }) {
       return;
     }
 
-    // UI preview only: keep the structured request in React state.
-    // No network request, persistent storage, or registration happens here.
     setValues(nextValues);
-    setPreviewComplete(true);
+    submittingRef.current = true;
+    setSubmitting(true);
+    setSubmitError("");
+    try {
+      await submitEnterpriseEarlyAccess(nextValues, requestIdRef.current);
+      setSubmitted(true);
+    } catch (error) {
+      setSubmitError(error?.code === "enterprise_rate_limited"
+        ? "Too many requests. Please try again later."
+        : "Your request could not be sent. Please try again.");
+    } finally {
+      submittingRef.current = false;
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -156,27 +174,27 @@ export default function EnterpriseEarlyAccessDialog({ isOpen, onClose }) {
       </button>
       <span className="eyebrow">AUTOBROLL ENTERPRISE</span>
 
-      {previewComplete ? (
+      {submitted ? (
         <div className="enterprise-dialog__confirmation">
-          <h2 id={`${id}-title`} ref={confirmationRef} tabIndex={-1}>Preview complete</h2>
-          <p id={`${id}-description`}>This form is not accepting submissions yet.</p>
-          <button type="button" className="button button--primary" onClick={requestClose}>Close preview</button>
+          <h2 id={`${id}-title`} ref={confirmationRef} tabIndex={-1}>Request received</h2>
+          <p id={`${id}-description`}>Thanks. We have received your early access request.</p>
+          <button type="button" className="button button--primary" onClick={requestClose}>Close</button>
         </div>
       ) : (
         <>
           <h2 id={`${id}-title`}>Get early access.</h2>
           <p id={`${id}-description`}>Enterprise is coming. Tell us about your team and we'll reach out when early access becomes available.</p>
 
-          <form className="enterprise-form" noValidate onSubmit={previewRequest}>
+          <form className="enterprise-form" noValidate onSubmit={submitRequest}>
             <div className="enterprise-form__row">
               <div className="enterprise-field">
                 <label htmlFor={`${id}-company`}>Company name <span aria-hidden="true">*</span></label>
-                <input id={`${id}-company`} ref={companyRef} name="companyName" type="text" autoComplete="organization" placeholder="Your company" required value={values.companyName} onChange={updateValue} aria-invalid={Boolean(errors.companyName)} aria-describedby={errors.companyName ? `${id}-company-error` : undefined} />
+                <input id={`${id}-company`} ref={companyRef} name="companyName" type="text" autoComplete="organization" placeholder="Your company" required maxLength={120} value={values.companyName} onChange={updateValue} aria-invalid={Boolean(errors.companyName)} aria-describedby={errors.companyName ? `${id}-company-error` : undefined} />
                 {errors.companyName && <span className="enterprise-field__error" id={`${id}-company-error`} role="alert">{errors.companyName}</span>}
               </div>
               <div className="enterprise-field">
                 <label htmlFor={`${id}-email`}>Work email <span aria-hidden="true">*</span></label>
-                <input id={`${id}-email`} ref={emailRef} name="workEmail" type="email" autoComplete="email" placeholder="you@company.com" required value={values.workEmail} onChange={updateValue} aria-invalid={Boolean(errors.workEmail)} aria-describedby={errors.workEmail ? `${id}-email-error` : undefined} />
+                <input id={`${id}-email`} ref={emailRef} name="workEmail" type="email" autoComplete="email" placeholder="you@company.com" required maxLength={254} value={values.workEmail} onChange={updateValue} aria-invalid={Boolean(errors.workEmail)} aria-describedby={errors.workEmail ? `${id}-email-error` : undefined} />
                 {errors.workEmail && <span className="enterprise-field__error" id={`${id}-email-error`} role="alert">{errors.workEmail}</span>}
               </div>
             </div>
@@ -211,8 +229,9 @@ export default function EnterpriseEarlyAccessDialog({ isOpen, onClose }) {
             </fieldset>
 
             <div className="enterprise-form__actions">
-              <p>Preview only — no request will be sent.</p>
-              <button className="button button--primary" type="submit">Request Early Access</button>
+              <p>Early access is not yet available.</p>
+              {submitError ? <span className="enterprise-field__error" role="alert">{submitError}</span> : null}
+              <button className="button button--primary" type="submit" disabled={submitting}>{submitting ? "Sending…" : "Request Early Access"}</button>
             </div>
           </form>
         </>
