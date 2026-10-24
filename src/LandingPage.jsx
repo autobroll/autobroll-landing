@@ -1,9 +1,14 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import AmbientBackground from "./components/AmbientBackground";
 import PremiumNavbar from "./components/PremiumNavbar";
 import VideoGallery from "./components/VideoGallery";
+import { DirectorArt, WorkflowArt } from "./components/ImmersiveVisuals";
+import EnterpriseEarlyAccessDialog from "./components/EnterpriseEarlyAccessDialog";
+import "./styles/premium-landing.css";
+import "./styles/enterprise.css";
 import {
   APP_URL,
+  enterprisePlan,
   facelessPanels,
   faqs,
   galleryCards,
@@ -49,85 +54,103 @@ function SectionIntro({ eyebrow, title, text, align = "left", aside }) {
 
 function HeroPreview() {
   const videosRef = useRef([]);
+  const stageRef = useRef(null);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let isVisible = true;
     const syncPlayback = () => {
+      if (stageRef.current) {
+        stageRef.current.dataset.moving = String(isVisible && !document.hidden && !mediaQuery.matches);
+      }
       videosRef.current.forEach((video) => {
         if (!video) return;
-        if (mediaQuery.matches) video.pause();
+        if (mediaQuery.matches || !isVisible || document.hidden) video.pause();
         else video.play().catch(() => {});
       });
     };
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+      syncPlayback();
+    }, { threshold: 0.01 });
+    if (videosRef.current[0]) observer.observe(videosRef.current[0]);
 
     syncPlayback();
     mediaQuery.addEventListener?.("change", syncPlayback);
-    return () => mediaQuery.removeEventListener?.("change", syncPlayback);
+    document.addEventListener("visibilitychange", syncPlayback);
+    return () => {
+      observer.disconnect();
+      mediaQuery.removeEventListener?.("change", syncPlayback);
+      document.removeEventListener("visibilitychange", syncPlayback);
+    };
   }, []);
 
   const featured = galleryCards[0];
 
   return (
-    <div className="hero-preview glass-shell" aria-label="Autobroll before and after preview">
-      <div className="hero-preview__toolbar">
-        <div className="window-dots" aria-hidden="true">
-          <span />
-          <span />
-          <span />
+    <div className="hero-preview-stage" ref={stageRef}>
+      <div className="hero-preview-glow" aria-hidden="true" />
+      <div className="hero-preview glass-shell" aria-label="Autobroll before and after preview">
+        <div className="hero-preview__toolbar">
+          <div className="window-dots" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+          <span>Autobroll workspace</span>
+          <span className="preview-status"><i /> Export ready</span>
         </div>
-        <span>Autobroll workspace</span>
-        <span className="preview-status"><i /> Export ready</span>
-      </div>
 
-      <div className="hero-preview__canvas">
-        <div className="hero-preview__sidecopy">
-          <span className="eyebrow">Live transformation</span>
-          <strong>Raw in.<br />Polished out.</strong>
-          <p>
-            Autobroll watches, understands and edits your video while you do
-            literally anything else.
-          </p>
-          <div className="preview-tool-list" aria-label="Applied Autobroll features">
-            <span><i /> Captions &amp; SFX</span>
-            <span><i /> B-roll and Motion</span>
-            <span><i /> Faceless video</span>
+        <div className="hero-preview__canvas">
+          <div className="hero-preview__sidecopy">
+            <span className="eyebrow">Live transformation</span>
+            <strong>Raw in.<br />Polished out.</strong>
+            <p>
+              Autobroll watches, understands and edits your video while you do
+              literally anything else.
+            </p>
+            <div className="preview-tool-list" aria-label="Applied Autobroll features">
+              <span><i /> Captions &amp; SFX</span>
+              <span><i /> B-roll and Motion</span>
+              <span><i /> Faceless video</span>
+            </div>
+          </div>
+
+          <div className="hero-preview__compare">
+            <div className="hero-preview__video-wrap">
+              <span className="compare-label">Before</span>
+              <video
+                ref={(node) => { videosRef.current[0] = node; }}
+                src={featured.beforeVideoUrl}
+                muted
+                loop
+                autoPlay
+                playsInline
+                preload="metadata"
+                aria-label="Raw video before Autobroll editing"
+              />
+            </div>
+            <div className="hero-preview__video-wrap hero-preview__video-wrap--after">
+              <span className="compare-label compare-label--accent">After</span>
+              <video
+                ref={(node) => { videosRef.current[1] = node; }}
+                src={featured.afterVideoUrl}
+                muted
+                loop
+                autoPlay
+                playsInline
+                preload="metadata"
+                aria-label="Polished video after Autobroll editing"
+              />
+            </div>
           </div>
         </div>
 
-        <div className="hero-preview__compare">
-          <div className="hero-preview__video-wrap">
-            <span className="compare-label">Before</span>
-            <video
-              ref={(node) => { videosRef.current[0] = node; }}
-              src={featured.beforeVideoUrl}
-              muted
-              loop
-              autoPlay
-              playsInline
-              preload="metadata"
-              aria-label="Raw video before Autobroll editing"
-            />
-          </div>
-          <div className="hero-preview__video-wrap hero-preview__video-wrap--after">
-            <span className="compare-label compare-label--accent">After</span>
-            <video
-              ref={(node) => { videosRef.current[1] = node; }}
-              src={featured.afterVideoUrl}
-              muted
-              loop
-              autoPlay
-              playsInline
-              preload="metadata"
-              aria-label="Polished video after Autobroll editing"
-            />
-          </div>
+        <div className="hero-preview__timeline" aria-hidden="true">
+          <span className="timeline-play">▶</span>
+          <div className="timeline-track"><i /></div>
+          <span>00:18 / 00:32</span>
         </div>
-      </div>
-
-      <div className="hero-preview__timeline" aria-hidden="true">
-        <span className="timeline-play">▶</span>
-        <div className="timeline-track"><i /></div>
-        <span>00:18 / 00:32</span>
       </div>
     </div>
   );
@@ -188,7 +211,7 @@ function ShowcaseSection() {
       <SectionIntro
         eyebrow="Real transformations"
         title={<span id="showcase-title">The difference should speak for itself.</span>}
-        text="Compare raw footage with the finished result. Replace or reorder these examples anytime from the content file."
+        text="Same footage. A completely different feeling. See what happens when every caption, cut and visual works together."
       />
       <VideoGallery cards={galleryCards} />
     </section>
@@ -269,7 +292,7 @@ function KineticDirectorSection() {
     >
       <div className="kinetic-section__copy">
         <span className="eyebrow">The AI Director</span>
-        <h2 id="kinetic-title">It sees the story before it builds the edit.</h2>
+        <h2 id="kinetic-title">It sees the story <span className="text-gradient">before it builds the edit.</span></h2>
         <p>
           Autobroll follows the context, rhythm and important moments in your
           footage—then turns that understanding into purposeful editing choices.
@@ -279,80 +302,7 @@ function KineticDirectorSection() {
         </a>
       </div>
 
-      <div className="kinetic-art" aria-hidden="true">
-        <div className="kinetic-art__grid" />
-        <svg className="kinetic-emblem" viewBox="0 0 800 800">
-          <defs>
-            <linearGradient id="kinetic-gold" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stopColor="#fff0bd" />
-              <stop offset="0.42" stopColor="#e6bd68" />
-              <stop offset="0.74" stopColor="#bd8430" />
-              <stop offset="1" stopColor="#f5d99c" />
-            </linearGradient>
-            <radialGradient id="kinetic-navy" cx="38%" cy="30%" r="76%">
-              <stop offset="0" stopColor="#1c2d48" />
-              <stop offset="0.52" stopColor="#0f1f36" />
-              <stop offset="1" stopColor="#07101e" />
-            </radialGradient>
-            <filter id="kinetic-glow" x="-40%" y="-40%" width="180%" height="180%">
-              <feGaussianBlur stdDeviation="8" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-            <mask id="kinetic-lashes-mask">
-              <rect width="800" height="800" fill="white" />
-              <circle cx="400" cy="400" r="306" fill="black" />
-            </mask>
-          </defs>
-
-          <g className="kinetic-emblem__rosette">
-            <g mask="url(#kinetic-lashes-mask)">
-              {Array.from({ length: 18 }, (_, index) => (
-                <ellipse
-                  key={index}
-                  cx="400"
-                  cy="86"
-                  rx="47"
-                  ry="88"
-                  transform={`rotate(${index * 20} 400 400)`}
-                  fill="rgba(230,189,104,.025)"
-                  stroke="url(#kinetic-gold)"
-                  strokeWidth="4"
-                />
-              ))}
-            </g>
-            <circle cx="400" cy="400" r="310" fill="rgba(7,16,30,.24)" stroke="rgba(245,217,156,.34)" strokeWidth="3" />
-            <circle cx="400" cy="400" r="299" fill="none" stroke="rgba(255,255,255,.09)" strokeWidth="2" />
-          </g>
-
-          <g className="kinetic-emblem__outer-orbit" fill="none">
-            <circle cx="400" cy="400" r="276" stroke="url(#kinetic-gold)" strokeWidth="7" filter="url(#kinetic-glow)" />
-            <circle cx="400" cy="400" r="261" stroke="rgba(230,189,104,.12)" strokeWidth="17" />
-            <circle cx="400" cy="400" r="241" stroke="rgba(245,217,156,.42)" strokeWidth="2.5" strokeDasharray="54 38" />
-          </g>
-
-          <g className="kinetic-emblem__inner-orbit" fill="none">
-            <circle cx="400" cy="400" r="187" stroke="url(#kinetic-gold)" strokeWidth="6" filter="url(#kinetic-glow)" />
-            <circle cx="400" cy="400" r="173" stroke="rgba(230,189,104,.1)" strokeWidth="13" />
-            <circle cx="400" cy="400" r="154" stroke="rgba(255,255,255,.2)" strokeWidth="2" strokeDasharray="12 18" />
-          </g>
-
-          <g className="kinetic-emblem__eye">
-            <circle cx="400" cy="400" r="112" fill="rgba(7,16,30,.2)" stroke="rgba(255,251,236,.9)" strokeWidth="8" filter="url(#kinetic-glow)" />
-            <circle cx="400" cy="400" r="96" fill="rgba(7,16,30,.34)" stroke="rgba(230,189,104,.16)" strokeWidth="2" />
-            <g className="kinetic-emblem__pupil">
-              <circle cx="429" cy="367" r="34" fill="rgba(7,16,30,.46)" stroke="url(#kinetic-gold)" strokeWidth="7" filter="url(#kinetic-glow)" />
-              <circle cx="439" cy="355" r="5" fill="#fff6da" opacity="0.88" />
-            </g>
-          </g>
-
-          <g className="kinetic-emblem__status">
-            <circle cx="400" cy="400" r="344" fill="none" stroke="rgba(255,255,255,.1)" strokeWidth="2" strokeDasharray="4 26" />
-          </g>
-        </svg>
-      </div>
+      <DirectorArt />
     </section>
   );
 }
@@ -362,27 +312,11 @@ function BreathingWorkflowSection() {
     <section className="breathing-section" aria-labelledby="breathing-title">
       <div className="breathing-section__copy">
         <span className="eyebrow">Autobroll in motion</span>
-        <h2 id="breathing-title">One upload. Every creative layer moves with it.</h2>
+        <h2 id="breathing-title">One upload.<br /><span className="text-gradient">Every creative layer moves with it.</span></h2>
+        <p>Captions, visuals, sound and motion. Beautifully orchestrated around your story.</p>
       </div>
 
-      <div className="breathing-art" aria-hidden="true">
-        <div className="breathing-art__grid" />
-        <div className="breathing-horizon" />
-        <div className="breathing-lobes">
-          {Array.from({ length: 9 }, (_, index) => <i key={index} />)}
-        </div>
-
-        <div className="breathing-core">
-          <span className="breathing-core__play">▶</span>
-          <div className="breathing-core__signal">
-            <i /><i /><i /><i /><i />
-          </div>
-        </div>
-
-        <span className="breathing-tag breathing-tag--captions"><i /> Captions &amp; SFX</span>
-        <span className="breathing-tag breathing-tag--visuals"><i /> B-roll &amp; Motion</span>
-        <span className="breathing-tag breathing-tag--faceless"><i /> Faceless video</span>
-      </div>
+      <WorkflowArt />
     </section>
   );
 }
@@ -433,6 +367,8 @@ function TestimonialsSection() {
 }
 
 function PricingSection() {
+  const [isEnterpriseOpen, setIsEnterpriseOpen] = useState(false);
+
   return (
     <section className="landing-section pricing-section" id="pricing" aria-labelledby="pricing-title">
       <SectionIntro
@@ -441,9 +377,9 @@ function PricingSection() {
         text="Choose the monthly video capacity that fits your workflow."
         align="center"
       />
-      <div className="pricing-grid">
+      <div className="pricing-grid pricing-grid--enterprise">
         {pricingPlans.map((plan) => (
-          <article className={`pricing-card${plan.featured ? " pricing-card--featured" : ""}`} key={plan.name}>
+          <article className={`pricing-card${plan.featured ? " pricing-card--featured" : ""}${plan.name === "Starter" || plan.name === "Pro" ? " pricing-card--paid" : ""}`} key={plan.name}>
             {plan.badge ? <span className="pricing-badge">{plan.badge}</span> : null}
             <span className="eyebrow">{plan.name}</span>
             <p className="pricing-card__description">{plan.description}</p>
@@ -456,7 +392,22 @@ function PricingSection() {
             </a>
           </article>
         ))}
+        <article className="pricing-card pricing-card--enterprise">
+          <span className="enterprise-invitation-badge">By invitation</span>
+          <span className="enterprise-wordmark">
+            <img src="/enterprise-wordmark.png" alt="Enterprise" width="1920" height="1080" loading="lazy" decoding="async" />
+          </span>
+          <p className="pricing-card__description">{enterprisePlan.description}</p>
+          <div className="pricing-card__price pricing-card__price--contact"><strong>{enterprisePlan.price}</strong><span>{enterprisePlan.suffix}</span></div>
+          <ul>
+            {enterprisePlan.features.map((feature) => <li key={feature}><CheckIcon /> {feature}</li>)}
+          </ul>
+          <button type="button" className="button button--ghost" aria-haspopup="dialog" onClick={() => setIsEnterpriseOpen(true)}>
+            {enterprisePlan.cta} <ArrowIcon />
+          </button>
+        </article>
       </div>
+      <EnterpriseEarlyAccessDialog isOpen={isEnterpriseOpen} onClose={() => setIsEnterpriseOpen(false)} />
     </section>
   );
 }
@@ -541,8 +492,32 @@ export default function LandingPage() {
     };
   }, []);
 
+  const pageRef = useRef(null);
+
+  useEffect(() => {
+    const page = pageRef.current;
+    if (!page || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    const targets = page.querySelectorAll(".section-intro, .process-card, .mode-card, .pricing-card, .faq-heading, .kinetic-section__copy, .breathing-section__copy");
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-revealed");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    targets.forEach((target) => {
+      target.classList.add("reveal-on-scroll");
+      observer.observe(target);
+    });
+    return () => {
+      observer.disconnect();
+      targets.forEach((target) => target.classList.remove("reveal-on-scroll", "is-revealed"));
+    };
+  }, []);
+
   return (
-    <div className="page-shell">
+    <div className="page-shell premium-landing" ref={pageRef}>
       <AmbientBackground />
       <PremiumNavbar links={navLinks} />
       <main className="page-content">

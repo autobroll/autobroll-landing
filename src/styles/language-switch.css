@@ -1,0 +1,42 @@
+/* Small segmented EN | FR control; inherits the current Autobroll navbar language. */
+.language-switch {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 3px;
+  padding: 4px 5px;
+  border: 1px solid rgba(255, 255, 255, .11);
+  border-radius: 999px;
+  background: rgba(8, 11, 18, .78);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .035);
+}
+.language-switch__option {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 5px 7px;
+  border-radius: 999px;
+  color: #858e9c;
+  font: 700 11px/1.2 "Manrope", sans-serif;
+  letter-spacing: .045em;
+  cursor: pointer;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+.language-switch__option.is-active { color: #f1d18a; background: rgba(227, 190, 111, .10); }
+.language-switch__option:hover { color: #f8e5ba; }
+.language-switch__option:focus-visible { outline: 2px solid #e6bd68; outline-offset: 2px; }
+.language-switch__separator { width: 1px; height: 12px; background: rgba(255, 255, 255, .14); }
+@media (max-width: 960px) { .navbar-actions { gap: 11px; } }
+@media (max-width: 420px) {
+  .navbar-actions { gap: 8px; }
+  .language-switch { padding: 3px; gap: 0; }
+  .language-switch__option { padding: 5px 6px; font-size: 10px; }
+}
+/* French labels are longer; retain the desktop layout while allowing breathing room. */
+@media (min-width: 961px) and (max-width: 1200px) {
+  html[lang="fr"] .navbar-shell { gap: 12px; }
+  html[lang="fr"] .nav-links--desktop { gap: 0; padding: 3px; }
+  html[lang="fr"] .nav-link { padding: 9px 8px; font-size: .79rem; }
+  html[lang="fr"] .navbar-actions { gap: 10px; }
+  html[lang="fr"] .button--nav { padding-inline: 13px; font-size: .82rem; }
+}

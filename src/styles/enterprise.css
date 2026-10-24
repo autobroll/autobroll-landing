@@ -1,0 +1,251 @@
+/* Homepage pricing-only refinements: preserve all shared plan styles and dialogs. */
+.premium-landing .pricing-grid--enterprise {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+}
+
+/* Reuse the existing Autobroll gold typography gradient for paid plan prices. */
+.premium-landing .pricing-card--paid .pricing-card__price strong {
+  color: var(--gold-bright); /* Fallback for browsers without clipped backgrounds. */
+  background: linear-gradient(120deg, #fff2d1 0%, var(--gold-bright) 38%, #c89138 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Silver / midnight blue signals a separate Enterprise offer, without a new theme. */
+.premium-landing .pricing-card--enterprise {
+  border-color: rgba(189, 207, 235, .68);
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(128, 158, 205, .28), transparent 62%),
+    linear-gradient(158deg, #162132 0%, #111a29 46%, #0b111d 100%);
+  box-shadow: inset 0 1px 0 rgba(247, 250, 255, .07), 0 18px 52px rgba(28, 45, 73, .12);
+}
+
+.premium-landing .pricing-card--enterprise:hover {
+  border-color: rgba(220, 232, 250, .88);
+  box-shadow: inset 0 1px 0 rgba(247, 250, 255, .11), 0 20px 60px rgba(48, 70, 109, .18);
+}
+
+.enterprise-invitation-badge {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 27px;
+  padding: 5px 11px;
+  border: 1px solid rgba(184, 203, 234, .65);
+  border-radius: 999px;
+  color: #d5e0f1;
+  background: rgba(156, 181, 217, .075);
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .055em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.enterprise-wordmark {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  width: min(100%, 185px);
+  margin-top: 23px; /* Reserve a clear line for the invitation badge. */
+  aspect-ratio: 1151 / 324;
+  overflow: hidden;
+}
+
+/* Display the original 1920 × 1080 PNG through its transparent-margin crop
+   (400, 393, 1151, 324). The image bytes, colors and proportions stay intact. */
+.enterprise-wordmark img {
+  position: absolute;
+  top: -121.296296%;
+  left: -34.752389%;
+  display: block;
+  width: 166.811468%;
+  max-width: none;
+  height: auto;
+}
+
+.premium-landing .pricing-card__price--contact {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.premium-landing .pricing-card__price--contact strong {
+  font-size: clamp(2.35rem, 3.6vw, 3.7rem);
+  letter-spacing: -.065em;
+  white-space: nowrap;
+}
+
+.premium-landing .pricing-card--enterprise > .button {
+  gap: 6px;
+  padding-inline: 12px;
+  font-size: clamp(.76rem, .95vw, .875rem);
+  white-space: nowrap;
+  border-color: #d2ddeb;
+  color: #101b2d;
+  background: linear-gradient(120deg, #e5edf9 0%, #c5d4eb 47%, #94aaca 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .62), 0 6px 23px rgba(111, 141, 189, .13);
+}
+
+.premium-landing .pricing-card--enterprise > .button:hover {
+  border-color: #eff5ff;
+  background: linear-gradient(120deg, #f1f5fd 0%, #d3dff0 47%, #a5b9d6 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .75), 0 10px 32px rgba(143, 172, 214, .25);
+}
+
+.pricing-card--enterprise > button,
+.enterprise-dialog button { cursor: pointer; }
+
+.enterprise-dialog {
+  width: min(660px, calc(100% - 40px));
+  max-width: none;
+  max-height: calc(100vh - 40px);
+  max-height: calc(100dvh - 40px);
+  margin: auto;
+  padding: 36px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  color: var(--white);
+  background: linear-gradient(140deg, #111925, #090e16);
+  box-shadow: var(--shadow);
+  font-family: inherit;
+  scrollbar-width: thin;
+  scrollbar-color: #586071 transparent;
+}
+
+.enterprise-dialog[open] { animation: enterprise-dialog-in 220ms cubic-bezier(.2, .7, .2, 1) both; }
+.enterprise-dialog::backdrop {
+  background: rgba(3, 5, 10, .76);
+  backdrop-filter: blur(8px);
+  animation: enterprise-backdrop-in 220ms ease both;
+}
+.enterprise-dialog.enterprise-dialog--closing { animation: enterprise-dialog-out 180ms ease both; }
+.enterprise-dialog--closing::backdrop { animation: enterprise-backdrop-out 180ms ease both; }
+
+.enterprise-dialog__close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--muted-light);
+  background: rgba(255, 255, 255, .035);
+  transition: border-color 180ms ease, color 180ms ease;
+}
+.enterprise-dialog__close:hover { border-color: var(--line-strong); color: var(--white); }
+.enterprise-dialog__close svg { width: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
+.enterprise-dialog > .eyebrow { display: block; padding-right: 32px; }
+.enterprise-dialog h2 {
+  margin: 20px 0 16px;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -.055em;
+}
+.enterprise-dialog > p,
+.enterprise-dialog__confirmation > p { margin: 0; color: var(--muted); font-size: .94rem; line-height: 1.7; }
+
+.enterprise-form { display: grid; gap: 22px; margin-top: 28px; }
+.enterprise-form__row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.enterprise-field { display: flex; min-width: 0; flex-direction: column; gap: 9px; }
+.enterprise-field label,
+.enterprise-needs legend { color: var(--muted-light); font-size: .82rem; font-weight: 600; line-height: 1.5; }
+.enterprise-field label > span { color: var(--gold); }
+.enterprise-field input,
+.enterprise-field select {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 11px 13px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  color: var(--white);
+  background: rgba(255, 255, 255, .035);
+  font: inherit;
+  font-size: .88rem;
+  line-height: 1.4;
+  transition: border-color 180ms ease, background 180ms ease;
+}
+.enterprise-field input::placeholder { color: #888f9f; opacity: 1; }
+.enterprise-field input:hover,
+.enterprise-field select:hover { border-color: rgba(230, 189, 104, .38); }
+.enterprise-field input:focus,
+.enterprise-field select:focus { border-color: var(--gold); background: rgba(230, 189, 104, .035); }
+.enterprise-field input[aria-invalid="true"] { border-color: var(--gold); }
+.enterprise-field__error { color: var(--gold-bright); font-size: .75rem; line-height: 1.5; }
+.enterprise-field select { cursor: pointer; }
+.enterprise-field select option { background: var(--panel-solid); color: var(--white); }
+
+.enterprise-needs { min-width: 0; margin: 0; padding: 0; border: 0; }
+.enterprise-needs legend { margin-bottom: 12px; padding: 0; }
+.enterprise-needs__options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.enterprise-needs__option {
+  display: flex;
+  min-height: 53px;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--muted-light);
+  background: rgba(255, 255, 255, .02);
+  cursor: pointer;
+  font-size: .8rem;
+  line-height: 1.4;
+  transition: border-color 180ms ease, background 180ms ease;
+}
+.enterprise-needs__option:hover { border-color: var(--line-strong); }
+.enterprise-needs__option:has(input:checked) { border-color: rgba(230, 189, 104, .5); background: var(--gold-soft); }
+.enterprise-needs__option input { flex: 0 0 auto; width: 15px; height: 15px; margin: 0; accent-color: var(--gold); }
+.enterprise-form__actions { display: grid; gap: 14px; margin-top: 2px; }
+.enterprise-form__actions p { margin: 0; text-align: center; color: var(--muted); font-size: .75rem; line-height: 1.5; }
+.enterprise-form__actions .button { width: 100%; }
+.enterprise-dialog__confirmation { padding-block: 14px 4px; }
+.enterprise-dialog__confirmation .button { width: 100%; margin-top: 32px; }
+
+@keyframes enterprise-dialog-in {
+  from { opacity: 0; transform: translateY(12px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes enterprise-dialog-out {
+  to { opacity: 0; transform: translateY(8px) scale(.985); }
+}
+@keyframes enterprise-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes enterprise-backdrop-out { to { opacity: 0; } }
+
+@media (max-width: 1439px) {
+  .premium-landing .pricing-grid--enterprise { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+  .premium-landing .pricing-grid--enterprise { grid-template-columns: minmax(0, 1fr); grid-auto-rows: auto; }
+}
+
+@media (max-width: 520px) {
+  .enterprise-dialog { width: calc(100% - 24px); max-height: calc(100dvh - 24px); padding: 28px 22px; border-radius: 18px; }
+  .enterprise-dialog__close { top: 14px; right: 14px; }
+  .enterprise-dialog > .eyebrow { font-size: .6rem; letter-spacing: .16em; }
+  .enterprise-dialog h2 { margin-top: 24px; }
+  .enterprise-form__row,
+  .enterprise-needs__options { grid-template-columns: minmax(0, 1fr); }
+  .enterprise-field input,
+  .enterprise-field select { font-size: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enterprise-dialog[open],
+  .enterprise-dialog::backdrop { animation: none; }
+}

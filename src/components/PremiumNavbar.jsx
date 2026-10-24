@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
+import "../styles/language-switch.css";
 import { APP_URL } from "../data/landingContent";
+import { useLanguage } from "../i18n/LanguageProvider";
 
 const AUTOBROLL_LOGO_URL = "/AutoBroll%20blanc%20alpha.png";
 
 export default function PremiumNavbar({ links, brandHref = "#top" }) {
   const [isOpen, setIsOpen] = useState(false);
+  const { language, setLanguage } = useLanguage();
 
   useEffect(() => {
     const closeOnEscape = (event) => {
@@ -47,6 +50,11 @@ export default function PremiumNavbar({ links, brandHref = "#top" }) {
         </nav>
 
         <div className="navbar-actions">
+          <div className="language-switch" role="group" aria-label={language === "fr" ? "Langue du site" : "Website language"} data-no-translate>
+            <button type="button" lang="en" className={`language-switch__option${language === "en" ? " is-active" : ""}`} aria-pressed={language === "en"} onClick={() => setLanguage("en")}>EN</button>
+            <span className="language-switch__separator" aria-hidden="true" />
+            <button type="button" lang="fr" className={`language-switch__option${language === "fr" ? " is-active" : ""}`} aria-pressed={language === "fr"} onClick={() => setLanguage("fr")}>FR</button>
+          </div>
           <a href={APP_URL} className="header-login">
             Log in
           </a>

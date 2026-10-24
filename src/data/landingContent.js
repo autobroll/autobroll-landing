@@ -44,7 +44,7 @@ export const testimonials = [
 export const pricingPlans = [
   {
     name: "Free",
-    description: "135 included credits · fixed",
+    description: "Your first step into the studio.",
     price: "$0",
     suffix: "/ month",
     features: [
@@ -56,7 +56,7 @@ export const pricingPlans = [
   },
   {
     name: "Starter",
-    description: "500 included credits · per month",
+    description: "For your everyday creative flow.",
     price: "$19",
     suffix: "/ month",
     features: [
@@ -70,7 +70,7 @@ export const pricingPlans = [
   },
   {
     name: "Pro",
-    description: "1500 included credits · per month",
+    description: "More room for bigger ambitions.",
     price: "$49",
     suffix: "/ month",
     features: [
@@ -81,6 +81,23 @@ export const pricingPlans = [
     cta: "Choose Pro",
   },
 ];
+
+// The Enterprise preview is only offered on the main landing page.
+export const enterprisePlan = {
+  description: "Built for teams at scale.",
+  price: "Let's Talk",
+  suffix: "Tailored pricing for your team",
+  features: [
+    "Custom AI Director",
+    "Centralized Brand Kit",
+    "Private Asset Library",
+    "Team Workspaces",
+    "Video Review & Approvals",
+    "AI Review Agent",
+    "And more...",
+  ],
+  cta: "Request Early Access",
+};
 
 export const faqs = [
   {
